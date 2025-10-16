@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档 - Word Online</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://img.icons8.com/color/48/000000/ms-word.png">
+</head>
+<body>
+
+    <div class="toolbar">
+        <div class="toolbar-content">
+            <button>文件</button>
+            <button>编辑</button>
+            <button>视图</button>
+            <span class="divider"></span>
+            <!-- 确保这三个按钮有正确的ID -->
+            <button id="bold-btn"><b>B</b></button>
+            <button id="italic-btn"><i>I</i></button>
+            <button id="underline-btn"><u>U</u></button>
+            <span class="divider"></span>
+            <button id="settings-btn">⚙️ 设置</button>
+        </div>
+    </div>
+
+    <div class="editor-container">
+        <div id="paper" contenteditable="true"></div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span id="close-btn" class="close-btn">&times;</span>
+            <h2>预设文本设置</h2>
+            <label for="preset-text">在这里输入或粘贴你想显示的完整文本：</label>
+            <textarea id="preset-text" rows="10" placeholder="公司收益连年下滑，准备裁员..."></textarea>
+            <div class="setting-option">
+                <input type="checkbox" id="fallback-switch">
+                <label for="fallback-switch">预设文本结束后，恢复正常输入</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确保是以 module 方式加载 main.js -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
