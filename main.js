@@ -1,51 +1,63 @@
 // main.js
 
 import WordLogic from './WordLogic.js';
-import GameLogic from './GameLogic.js';
+import Game from './Game.js';
 
-const paper = document.getElementById('paper');
-const secretCode = "playgame";
-let isGameActive = false;
-let inputBuffer = "";
+// --- 将所有代码包裹在 DOMContentLoaded 事件中 ---
+document.addEventListener('DOMContentLoaded', () => {
 
-const word = new WordLogic(paper);
-const game = new GameLogic(() => {
-    isGameActive = false;
-    console.log("游戏结束，URL控制已释放。");
-});
+    // ---- 初始化 ----
+    // CHANGED: 这里的 ID 必须与你最终的 index.html 匹配！
+    const paper = document.getElementById('paper'); 
+    
+    const secretCode = "playgame";
+    let isGameActive = false;
+    let inputBuffer = "";
 
-// 这一行是修复按钮功能的关键！
-word.init();
-
-document.addEventListener('keydown', (event) => {
-    if (document.activeElement === word.presetTextarea) {
-        return;
+    // 检查 paper 元素是否存在，以防万一
+    if (!paper) {
+        console.error("Fatal Error: #paper element not found in the DOM.");
+        return; // 如果找不到，直接停止所有JS执行
     }
 
-    const key = event.key.toLowerCase();
+    const word = new WordLogic(paper);
+    const game = new Game(() => {
+        isGameActive = false;
+        console.log("游戏结束，URL控制已释放。");
+    });
 
-    if (isGameActive) {
-        game.handleKeyPress(key);
-    }
+    // 现在可以安全地调用 init
+    word.init();
 
-    if (document.activeElement === paper) {
-        word.handleKeyDown(event);
-    }
-   
-    if (key.length === 1) {
-        inputBuffer += key;
-        if (inputBuffer.length > secretCode.length) {
-            inputBuffer = inputBuffer.slice(1);
+    // ---- 主事件监听 ----
+    document.addEventListener('keydown', (event) => {
+        // 确保 word 和 word.settingsModal 都已初始化
+        if (word && word.settingsModal && word.settingsModal.contains(document.activeElement)) {
+            return;
         }
-        if (inputBuffer === secretCode) {
-            inputBuffer = '';
-            if (isGameActive) {
-                game.end(false);
+
+        const key = event.key.toLowerCase();
+
+        if (isGameActive) {
+            game.handleKeyPress(key);
+        }
+
+        // Word 的键盘输入现在由它自己的类内部处理，
+        // 但我们需要在这里处理秘密指令的输入
+        if (key.length === 1 && document.activeElement === paper) {
+            inputBuffer += key;
+            if (inputBuffer.length > secretCode.length) {
+                inputBuffer = inputBuffer.slice(1);
             }
-            isGameActive = true;
-            game.start();
+            if (inputBuffer === secretCode) {
+                inputBuffer = '';
+                if (isGameActive) game.end(false);
+                isGameActive = true;
+                game.start();
+            }
+        } else if (key === "Backspace") {
+            inputBuffer = inputBuffer.slice(0, -1);
         }
-    } else if (key === "Backspace") {
-        inputBuffer = inputBuffer.slice(0, -1);
-    }
-});
+    });
+
+}); // DOMContentLoaded 结束

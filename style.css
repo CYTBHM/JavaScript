@@ -3,72 +3,83 @@ body {
     background-color: #f0f2f5;
     margin: 0;
     font-family: Arial, sans-serif;
-    /* CHANGED: 增加了上边距，为悬浮的工具栏留出空间 */
     padding-top: 60px; 
 }
 
-/* 编辑器主容器 */
+/* 编辑器主容器，负责居中白纸 */
 .editor-container {
-    /* 移除固定的宽度，让它自然地撑满一行 */
     display: flex;
     justify-content: center;
 }
 
-/* --- CHANGED: 工具栏样式重大更新 --- */
+/* 工具栏样式 */
 .toolbar {
     background-color: #f8f9fa;
     border-bottom: 1px solid #dee2e6;
-    padding: 5px 0; /* 垂直内边距，水平由内部容器控制 */
+    padding: 5px 0;
     position: fixed;
     top: 0;
-    left: 0; /* 从左边开始 */
-    width: 100%; /* 宽度100% */
+    left: 0;
+    width: 100%;
     box-sizing: border-box;
     z-index: 100;
 }
-/* 新增：工具栏内部容器，让按钮不会贴着屏幕边缘 */
 .toolbar-content {
     width: 8.5in;
-    max-width: 95%; /* 在小屏幕上留些边距 */
-    margin: 0 auto; /* 自动居中 */
+    max-width: 95%;
+    margin: 0 auto;
     display: flex;
     align-items: center;
+    gap: 5px;
 }
 
-.toolbar button {
-    background: none;
-    border: 1px solid transparent;
-    padding: 5px 8px;
+/* 通用工具栏项目样式 */
+.toolbar-item, .toolbar-button {
+    background-color: transparent;
+    border: 1px solid #ccc;
     border-radius: 3px;
-    cursor: pointer;
+    padding: 4px 6px;
+    font-family: sans-serif;
     font-size: 14px;
+    cursor: pointer;
+    height: 28px;
+    box-sizing: border-box;
 }
-.toolbar button:hover {
+
+.toolbar-button:hover, .toolbar-item:hover {
     background-color: #e2e6ea;
-    border-color: #dae0e5;
 }
+
+#fontcolor-picker {
+    padding: 2px;
+    width: 40px;
+}
+
 .toolbar .divider {
     border-left: 1px solid #ccc;
     margin: 0 8px;
     height: 20px;
 }
 
-/* “白纸”的样式 */
+/* "白纸"样式 */
 #paper {
-    width: 8.5in; /* 明确宽度 */
+    width: 8.5in;
+    max-width: 100%;
+    min-height: 11in; /* 使用 min-height，让它可以无限变长 */
     background-color: white;
-    min-height: 11in;
     padding: 1in;
+    margin-bottom: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     box-sizing: border-box;
     font-size: 16px;
     line-height: 1.6;
 }
-#paper:focus { outline: none; }
 
-/* --- NEW: 全新的悬浮窗口 (Modal) 样式 --- */
+#paper:focus {
+    outline: none;
+}
 
-/* 半透明背景层 */
+/* 设置弹窗 (Modal) 样式 */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -79,10 +90,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* 比工具栏更高的层级 */
+    z-index: 1000;
 }
-
-/* 弹出窗口的内容框 */
 .modal-content {
     background-color: white;
     padding: 20px 30px;
@@ -90,14 +99,9 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     width: 500px;
     max-width: 90%;
-    position: relative; /* 为了定位关闭按钮 */
+    position: relative;
 }
-
-.modal-content h2 {
-    margin-top: 0;
-}
-
-/* 关闭按钮 */
+.modal-content h2 { margin-top: 0; }
 .close-btn {
     position: absolute;
     top: 10px;
@@ -107,11 +111,7 @@ body {
     color: #aaa;
     cursor: pointer;
 }
-.close-btn:hover {
-    color: #333;
-}
-
-/* 文本输入区域样式 */
+.close-btn:hover { color: #333; }
 .modal-content textarea {
     width: 100%;
     margin-top: 10px;
@@ -122,20 +122,40 @@ body {
     border-radius: 4px;
 }
 
-/* 用来隐藏/显示设置面板的类 */
+/* 控制显示/隐藏 */
 .hidden {
     display: none;
 }
 
-/* --- NEW: 新增设置选项的样式 --- */
-.setting-option {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
+/* 表情符号面板样式 */
+.emoji-panel {
+    position: fixed; /* 使用 fixed 定位，相对于浏览器窗口 */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
+    z-index: 200;
 }
-.setting-option label {
-    margin-left: 8px;
+.emoji-panel span {
+    font-size: 24px;
     cursor: pointer;
-    -webkit-user-select: none; /* 兼容 Safari 和老版 Chrome */
-    user-select: none;         /* 标准属性 */
+    text-align: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
 }
+.emoji-panel span:hover { background-color: #f0f0f0; }
+
+.emoji-close-btn {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    font-size: 20px;
+    color: #aaa;
+    cursor: pointer;
+}
+.emoji-close-btn:hover { color: #333; }

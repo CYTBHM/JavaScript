@@ -11,21 +11,75 @@
 
     <div class="toolbar">
         <div class="toolbar-content">
-            <button>文件</button>
-            <button>编辑</button>
-            <button>视图</button>
+            <select id="font-select" class="toolbar-item" title="选择字体">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Times New Roman, Times, serif">Times New Roman</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+            </select>
+
+            <select id="fontsize-select" class="toolbar-item" title="选择字号">
+                <option value="1">10px</option>
+                <option value="2">13px</option>
+                <option value="3" selected>16px</option>
+                <option value="4">18px</option>
+                <option value="5">24px</option>
+                <option value="6">32px</option>
+                <option value="7">48px</option>
+            </select>
+            
+            <input type="color" id="fontcolor-picker" class="toolbar-item" title="字体颜色">
+
             <span class="divider"></span>
-            <!-- 确保这三个按钮有正确的ID -->
-            <button id="bold-btn"><b>B</b></button>
-            <button id="italic-btn"><i>I</i></button>
-            <button id="underline-btn"><u>U</u></button>
+
+            <button id="bold-btn" class="toolbar-button" title="加粗"><b>B</b></button>
+            <button id="italic-btn" class="toolbar-button" title="倾斜"><i>I</i></button>
+            <button id="underline-btn" class="toolbar-button" title="下划线"><u>U</u></button>
+
             <span class="divider"></span>
-            <button id="settings-btn">⚙️ 设置</button>
+
+            <button id="align-left-btn" class="toolbar-button" title="左对齐">㊧</button>
+            <button id="align-center-btn" class="toolbar-button" title="居中">㊥</button>
+            <button id="align-right-btn" class="toolbar-button" title="右对齐">㊨</button>
+            <button id="align-justify-btn" class="toolbar-button" title="两端对齐">㊣</button>
+
+            <button id="insert-emoji-btn" class="toolbar-button" title="插入表情">😊</button>
+            
+            <span class="divider"></span>
+
+            <button id="settings-btn" class="toolbar-button">⚙️ 设置</button>
         </div>
     </div>
 
     <div class="editor-container">
-        <div id="paper" contenteditable="true"></div>
+        <div id="paper" contenteditable="true">
+            
+            <h1>Hello, I'm CYTBHM! 👋</h1>
+            <p>
+                Welcome to my personal corner on the web. I'm a university student currently pursuing a degree in <strong>Intelligent Manufacturing Engineering</strong>.
+            </p>
+            
+            <h2>My Background & Interests 💻🎮</h2>
+            <p>
+                Beyond my major,My interests include programming, and I'm also a video game enthusiast.  This love for gaming isn't just about playing; it's about creating. I've previously dabbled in game development using <strong>Unity and C#</strong>, and have also built software applications with <strong>Python</strong>. This website, as you see it, is the final project for my current JavaScript course—a new and exciting language I'm adding to my toolkit.
+            </p>
+
+            <h2>About This "Webpage" 🤫</h2>
+            <p>
+                I don't have much else to introduce about myself, so let me tell you about this webpage instead. It serves both as my personal website and a disguised online Word editor.  You have full freedom to perform text editing here, including deleting this very self-introduction you're reading.
+            </p>
+            <p>
+                But here's the fun part: it can help you <em>look</em> like you're working. By clicking the <strong>⚙️ Settings</strong> button, you can define a "preset text". Once set, anything you type in the blank area will be magically replaced by your default text. It's the perfect tool for those moments when you need to discreetly "slack off". 😉
+            </p>
+
+            <hr>
+            
+            <p><em>
+                Now, feel free to explore the features, or simply select and delete this text to begin your own creation.
+            </em></p>
+
+        </div>
     </div>
 
     <div id="settings-modal" class="modal-overlay hidden">
@@ -33,15 +87,14 @@
             <span id="close-btn" class="close-btn">&times;</span>
             <h2>预设文本设置</h2>
             <label for="preset-text">在这里输入或粘贴你想显示的完整文本：</label>
-            <textarea id="preset-text" rows="10" placeholder="公司收益连年下滑，准备裁员..."></textarea>
-            <div class="setting-option">
-                <input type="checkbox" id="fallback-switch">
-                <label for="fallback-switch">预设文本结束后，恢复正常输入</label>
-            </div>
+            <textarea id="preset-text" rows="10" placeholder="试试在白纸上输入“playgame”！"></textarea>
         </div>
     </div>
 
-    <!-- 确保是以 module 方式加载 main.js -->
+    <div id="emoji-panel" class="emoji-panel hidden">
+        <span id="emoji-close-btn" class="emoji-close-btn">&times;</span>
+    </div>
+
     <script type="module" src="main.js"></script>
 </body>
 </html>
