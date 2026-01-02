@@ -3,96 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文档 - Word Online</title>
+    <title>文档1 - Word</title>
+    <!-- 使用微软风格的图标库 (可选，这里用 emoji 和字符模拟以保持无外部依赖) -->
     <link rel="stylesheet" href="style.css">
+    <!-- 伪装 Favicon -->
     <link rel="icon" href="https://img.icons8.com/color/48/000000/ms-word.png">
 </head>
 <body>
 
-    <div class="toolbar">
-        <div class="toolbar-content">
-            <select id="font-select" class="toolbar-item" title="选择字体">
-                <option value="Arial, sans-serif">Arial</option>
-                <option value="Georgia, serif">Georgia</option>
-                <option value="Courier New, monospace">Courier New</option>
-                <option value="Times New Roman, Times, serif">Times New Roman</option>
-                <option value="Verdana, sans-serif">Verdana</option>
-            </select>
-
-            <select id="fontsize-select" class="toolbar-item" title="选择字号">
-                <option value="1">10px</option>
-                <option value="2">13px</option>
-                <option value="3" selected>16px</option>
-                <option value="4">18px</option>
-                <option value="5">24px</option>
-                <option value="6">32px</option>
-                <option value="7">48px</option>
-            </select>
-            
-            <input type="color" id="fontcolor-picker" class="toolbar-item" title="字体颜色">
-
-            <span class="divider"></span>
-
-            <button id="bold-btn" class="toolbar-button" title="加粗"><b>B</b></button>
-            <button id="italic-btn" class="toolbar-button" title="倾斜"><i>I</i></button>
-            <button id="underline-btn" class="toolbar-button" title="下划线"><u>U</u></button>
-
-            <span class="divider"></span>
-
-            <button id="align-left-btn" class="toolbar-button" title="左对齐">㊧</button>
-            <button id="align-center-btn" class="toolbar-button" title="居中">㊥</button>
-            <button id="align-right-btn" class="toolbar-button" title="右对齐">㊨</button>
-            <button id="align-justify-btn" class="toolbar-button" title="两端对齐">㊣</button>
-
-            <button id="insert-emoji-btn" class="toolbar-button" title="插入表情">😊</button>
-            
-            <span class="divider"></span>
-
-            <button id="settings-btn" class="toolbar-button">⚙️ 设置</button>
+    <!-- 1. 顶部蓝色导航栏 -->
+    <div class="app-header">
+        <div class="left-section">
+            <div class="waffle-menu">:::</div>
+            <span class="brand-name">Word</span>
+            <div class="doc-info">
+                <span class="doc-title">文档1</span>
+                <span class="save-status"> - 保存到 OneDrive</span>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="user-avatar">U</div>
         </div>
     </div>
 
-    <div class="editor-container">
-        <div id="paper" contenteditable="true">
-            
-            <h1>Hello, I'm CYTBHM! 👋</h1>
-            <p>
-                Welcome to my personal corner on the web. I'm a university student currently pursuing a degree in <strong>Intelligent Manufacturing Engineering</strong>.
-            </p>
-            
-            <h2>My Background & Interests 💻🎮</h2>
-            <p>
-                Beyond my major,My interests include programming, and I'm also a video game enthusiast.  This love for gaming isn't just about playing; it's about creating. I've previously dabbled in game development using <strong>Unity and C#</strong>, and have also built software applications with <strong>Python</strong>. This website, as you see it, is the final project for my current JavaScript course—a new and exciting language I'm adding to my toolkit.
-            </p>
+    <!-- 2. 功能区 (Ribbon) 容器 -->
+    <div class="ribbon-container">
+        <!-- 选项卡 -->
+        <div class="ribbon-tabs">
+            <div class="tab">文件</div>
+            <div class="tab active">开始</div>
+            <div class="tab">插入</div>
+            <div class="tab">布局</div>
+            <div class="tab">引用</div>
+            <div class="tab">审阅</div>
+            <div class="tab">视图</div>
+            <div class="tab">帮助</div>
+        </div>
 
-            <h2>About This "Webpage" 🤫</h2>
-            <p>
-                I don't have much else to introduce about myself, so let me tell you about this webpage instead. It serves both as my personal website and a disguised online Word editor.  You have full freedom to perform text editing here, including deleting this very self-introduction you're reading.
-            </p>
-            <p>
-                But here's the fun part: it can help you <em>look</em> like you're working. By clicking the <strong>⚙️ Settings</strong> button, you can define a "preset text". Once set, anything you type in the blank area will be magically replaced by your default text. It's the perfect tool for those moments when you need to discreetly "slack off". 😉
-            </p>
+        <!-- 工具栏 (对应 WordLogic.js 的 id) -->
+        <div class="ribbon-toolbar">
+            <!-- 字体设置组 -->
+            <div class="group">
+                <select id="font-select" class="ribbon-select font-family" title="字体">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="SimHei, sans-serif">黑体</option>
+                    <option value="SimSun, serif">宋体</option>
+                    <option value="'Microsoft YaHei', sans-serif">微软雅黑</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                </select>
+                <select id="fontsize-select" class="ribbon-select font-size" title="字号">
+                    <option value="1">10</option>
+                    <option value="2">13</option>
+                    <option value="3" selected>16</option>
+                    <option value="4">18</option>
+                    <option value="5">24</option>
+                    <option value="6">32</option>
+                    <option value="7">48</option>
+                </select>
+            </div>
 
-            <hr>
-            
-            <p><em>
-                Now, feel free to explore the features, or simply select and delete this text to begin your own creation.
-            </em></p>
+            <div class="separator"></div>
 
+            <!-- 样式组 -->
+            <div class="group">
+                <button id="bold-btn" class="ribbon-btn" title="加粗 (Ctrl+B)"><b>B</b></button>
+                <button id="italic-btn" class="ribbon-btn" title="倾斜 (Ctrl+I)"><i>I</i></button>
+                <button id="underline-btn" class="ribbon-btn" title="下划线 (Ctrl+U)"><u>U</u></button>
+                <!-- 颜色选择器伪装成按钮 -->
+                <div class="color-picker-wrapper" title="字体颜色">
+                    <span class="color-label">A</span>
+                    <input type="color" id="fontcolor-picker" aria-label="选择字体颜色">
+                    <div class="color-bar"></div>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <!-- 对齐组 -->
+            <div class="group">
+                <button id="align-left-btn" class="ribbon-btn" title="左对齐">
+                    <span class="icon-lines lines-left">==<br>==<br>==</span>
+                </button>
+                <button id="align-center-btn" class="ribbon-btn" title="居中">
+                    <span class="icon-lines lines-center">==<br>==<br>==</span>
+                </button>
+                <button id="align-right-btn" class="ribbon-btn" title="右对齐">
+                    <span class="icon-lines lines-right">==<br>==<br>==</span>
+                </button>
+                <button id="align-justify-btn" class="ribbon-btn" title="两端对齐">
+                    <span class="icon-lines lines-justify">==<br>==<br>==</span>
+                </button>
+            </div>
+
+
+            <div class="separator"></div>
+
+            <!-- 插入与设置组 -->
+            <div class="group">
+                <button id="insert-emoji-btn" class="ribbon-btn" title="插入表情">😊</button>
+                <!-- 设置按钮伪装成“编辑器设置” -->
+                <button id="settings-btn" class="ribbon-btn" title="编辑器首选项">⚙️</button>
+            </div>
         </div>
     </div>
 
+    <!-- 3. 主编辑区域 -->
+    <div class="workspace">
+        <!-- 纸张 -->
+        <div id="paper" class="paper-sheet" contenteditable="true" spellcheck="false"></div>
+    </div>
+
+    <!-- 4. 底部状态栏 -->
+    <div class="status-bar">
+        <div class="status-left">
+            <span>第 1 页，共 1 页</span>
+            <span>0 个字</span>
+            <span>中文(中国)</span>
+        </div>
+        <div class="status-right">
+            <span>专注模式</span>
+            <span>100%</span>
+            <span class="zoom-btn">+</span>
+        </div>
+    </div>
+
+    <!-- 5. 模态框与面板 (ID必须保留) -->
+    
+    <!-- 设置弹窗 -->
     <div id="settings-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <span id="close-btn" class="close-btn">&times;</span>
-            <h2>预设文本设置</h2>
-            <label for="preset-text">在这里输入或粘贴你想显示的完整文本：</label>
-            <textarea id="preset-text" rows="10" placeholder="试试在白纸上输入“playgame”！"></textarea>
+            <div class="modal-header">
+                <h2>开发人员工具 / 预设文本</h2>
+            </div>
+            <div class="modal-body">
+                <p class="modal-hint">输入下方的文本后，编辑器将进入“演示模式”。所有的键盘输入都将按顺序输出以下内容。</p>
+                <textarea id="preset-text" placeholder="在此粘贴文章或代码..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="ms-btn ms-btn-primary" onclick="document.getElementById('close-btn').click()">保存并关闭</button>
+            </div>
         </div>
     </div>
 
+    <!-- 表情面板 -->
     <div id="emoji-panel" class="emoji-panel hidden">
         <span id="emoji-close-btn" class="emoji-close-btn">&times;</span>
+        <!-- JS 会在这里填充表情 -->
     </div>
 
     <script type="module" src="main.js"></script>

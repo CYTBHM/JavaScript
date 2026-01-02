@@ -1,161 +1,283 @@
-/* 全局样式 */
+:root {
+    --word-blue: #2b579a;
+    --ribbon-bg: #f3f2f1;
+    --ribbon-hover: #e1dfdd;
+    --border-color: #edebe9;
+    --paper-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.15);
+    --workspace-bg: #f0f2f5;
+    --font-ui: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+}
+
 body {
-    background-color: #f0f2f5;
     margin: 0;
-    font-family: Arial, sans-serif;
-    padding-top: 60px; 
+    padding: 0;
+    font-family: var(--font-ui);
+    background-color: var(--workspace-bg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 防止整个页面滚动 */
 }
 
-/* 编辑器主容器，负责居中白纸 */
-.editor-container {
+/* --- 1. 顶部蓝色导航栏 --- */
+.app-header {
+    background-color: var(--word-blue);
+    height: 48px;
     display: flex;
-    justify-content: center;
-}
-
-/* 工具栏样式 */
-.toolbar {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-    padding: 5px 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 100;
-}
-.toolbar-content {
-    width: 8.5in;
-    max-width: 95%;
-    margin: 0 auto;
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 5px;
+    padding: 0 16px;
+    color: white;
+    flex-shrink: 0;
 }
 
-/* 通用工具栏项目样式 */
-.toolbar-item, .toolbar-button {
-    background-color: transparent;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    padding: 4px 6px;
-    font-family: sans-serif;
+.left-section { display: flex; align-items: center; gap: 15px; }
+.waffle-menu { font-size: 20px; cursor: pointer; opacity: 0.8; letter-spacing: 2px; }
+.brand-name { font-weight: 600; font-size: 16px; }
+.doc-info { display: flex; flex-direction: column; font-size: 12px; margin-left: 10px; }
+.doc-title { font-weight: 600; font-size: 14px; }
+.save-status { opacity: 0.8; font-size: 11px; }
+
+.user-avatar {
+    width: 32px; height: 32px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
     font-size: 14px;
     cursor: pointer;
+}
+
+/* --- 2. 功能区 Ribbon --- */
+.ribbon-container {
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.ribbon-tabs {
+    background-color: var(--word-blue);
+    display: flex;
+    padding-left: 10px;
+    overflow: hidden;
+}
+
+.tab {
+    padding: 8px 18px;
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tab:hover { background-color: rgba(255,255,255,0.1); color: white; }
+.tab.active {
+    background-color: #fff;
+    color: var(--word-blue);
+    font-weight: 600;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.ribbon-toolbar {
+    background-color: var(--ribbon-bg);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    height: 50px;
+}
+
+.group { display: flex; align-items: center; gap: 4px; }
+.separator { width: 1px; height: 24px; background-color: #c8c6c4; margin: 0 6px; }
+
+/* 按钮样式 */
+.ribbon-btn {
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 4px 6px;
+    min-width: 30px;
+    height: 32px;
+    cursor: pointer;
+    border-radius: 2px;
+    color: #333;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ribbon-btn:hover { background-color: var(--ribbon-hover); }
+.ribbon-btn:active { background-color: #c8c6c4; }
+
+/* 下拉框样式 */
+.ribbon-select {
+    border: 1px solid transparent;
+    background: transparent;
     height: 28px;
-    box-sizing: border-box;
-}
-
-.toolbar-button:hover, .toolbar-item:hover {
-    background-color: #e2e6ea;
-}
-
-#fontcolor-picker {
-    padding: 2px;
-    width: 40px;
-}
-
-.toolbar .divider {
-    border-left: 1px solid #ccc;
-    margin: 0 8px;
-    height: 20px;
-}
-
-/* "白纸"样式 */
-#paper {
-    width: 8.5in;
-    max-width: 100%;
-    min-height: 11in; /* 使用 min-height，让它可以无限变长 */
-    background-color: white;
-    padding: 1in;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    box-sizing: border-box;
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-#paper:focus {
+    padding: 2px 4px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: #333;
     outline: none;
+    border-radius: 2px;
+}
+.ribbon-select:hover { border-color: #c8c6c4; background-color: white; }
+.font-family { width: 120px; }
+.font-size { width: 50px; }
+
+/* 颜色选择器特殊处理 */
+.color-picker-wrapper {
+    position: relative;
+    width: 30px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+.color-picker-wrapper:hover { background-color: var(--ribbon-hover); }
+.color-label { font-weight: bold; font-size: 14px; margin-bottom: -2px; }
+.color-bar { width: 16px; height: 3px; background-color: red; margin-top: 1px; }
+#fontcolor-picker {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer;
 }
 
-/* 设置弹窗 (Modal) 样式 */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+/* 模拟对齐图标 */
+.icon-lines { font-size: 6px; line-height: 5px; font-weight: bold; color: #555; display: block; width: 12px; }
+
+/* --- 3. 工作区与纸张 --- */
+.workspace {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    padding: 30px 20px 60px 20px;
+    background-color: var(--workspace-bg);
 }
+
+.paper-sheet {
+    width: 210mm; /* A4 真实宽度 */
+    min-height: 297mm;
+    background: white;
+    box-shadow: var(--paper-shadow);
+    padding: 25.4mm; /* 标准页边距 */
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Calibri", "Arial", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #000;
+}
+
+/* --- 4. 底部状态栏 --- */
+.status-bar {
+    height: 24px;
+    background-color: var(--word-blue);
+    color: white;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    flex-shrink: 0;
+    cursor: default;
+}
+.status-left, .status-right { display: flex; gap: 15px; }
+.status-left span:hover, .status-right span:hover { background-color: rgba(255,255,255,0.1); cursor: pointer; }
+
+/* --- 5. 模态框 (样式优化) --- */
+.hidden { display: none !important; }
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.lines-left { text-align: left; }
+.lines-center { text-align: center; }
+.lines-right { text-align: right; }
+.lines-justify { text-align: justify; }
+
+.modal-hint {
+    font-size: 13px; 
+    color: #666; 
+    margin-bottom: 10px;
+}
+
 .modal-content {
     background-color: white;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     width: 500px;
     max-width: 90%;
-    position: relative;
-}
-.modal-content h2 { margin-top: 0; }
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-}
-.close-btn:hover { color: #333; }
-.modal-content textarea {
-    width: 100%;
-    margin-top: 10px;
-    padding: 8px;
-    box-sizing: border-box;
-    font-size: 14px;
-    border: 1px solid #ccc;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 控制显示/隐藏 */
-.hidden {
-    display: none;
+.modal-header { padding: 15px 20px; background-color: #f3f2f1; border-bottom: 1px solid #e1dfdd; }
+.modal-header h2 { margin: 0; font-size: 16px; color: #333; font-weight: 600; }
+
+.modal-body { padding: 20px; }
+.modal-content textarea {
+    width: 100%; height: 200px;
+    padding: 10px;
+    border: 1px solid #8a8886;
+    border-radius: 0;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+}
+.modal-content textarea:focus { border-color: var(--word-blue); border-width: 2px; padding: 9px; }
+
+.modal-footer { padding: 15px 20px; border-top: 1px solid #e1dfdd; display: flex; justify-content: flex-end; background-color: #fbfbfb; }
+
+.close-btn {
+    position: absolute; top: 10px; right: 15px;
+    font-size: 20px; color: #666; cursor: pointer; z-index: 10;
 }
 
-/* 表情符号面板样式 */
+.ms-btn { border: none; padding: 6px 20px; font-size: 14px; cursor: pointer; min-width: 80px; border-radius: 2px; }
+.ms-btn-primary { background-color: var(--word-blue); color: white; }
+.ms-btn-primary:hover { background-color: #254a84; }
+
+/* --- 6. 表情面板 --- */
 .emoji-panel {
-    position: fixed; /* 使用 fixed 定位，相对于浏览器窗口 */
+    position: fixed; /* JS 会计算 top/left */
     background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e1dfdd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     padding: 10px;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 8px;
-    z-index: 200;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    z-index: 1000;
+    width: 220px;
+    border-radius: 2px;
 }
 .emoji-panel span {
-    font-size: 24px;
-    cursor: pointer;
-    text-align: center;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+    font-size: 20px; cursor: pointer; text-align: center;
+    padding: 5px; border-radius: 2px;
 }
-.emoji-panel span:hover { background-color: #f0f0f0; }
-
+.emoji-panel span:hover { background-color: #f3f2f1; }
 .emoji-close-btn {
-    position: absolute;
-    top: 2px;
-    right: 8px;
-    font-size: 20px;
-    color: #aaa;
-    cursor: pointer;
+    position: absolute; top: -10px; right: -10px;
+    background: white; border-radius: 50%; width: 20px; height: 20px;
+    text-align: center; line-height: 20px; font-size: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer;
 }
-.emoji-close-btn:hover { color: #333; }

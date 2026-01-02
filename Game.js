@@ -1,41 +1,51 @@
 // Game.js
+
 import Ticker from './Ticker.js';
 import Track from './Track.js';
 import Renderer from './Renderer.js';
 import NoteGenerator from './NoteGenerator.js';
 
 export default class Game {
+    static NOTE_A_CHAR = '☢';
+    static NOTE_B_CHAR = '☀';
+    static HIT_CHAR = '❤';
+    static MISS_CHAR = '☠';
+
     constructor(onGameEndCallback) {
         this.onGameEnd = onGameEndCallback;
 
-        // 游戏参数
         this.maxMisses = 5;
-        this.keys = { f: { side: 'left', type: '▼' }, d: { side: 'left', type: '☀' }, j: { side: 'right', type: '▼' }, k: { side: 'right', type: '☀' } };
-        this.difficultyLevels = { 5: 750, 25: 500, 125: 250 }; // 得分阈值 -> 周期(ms)
+        this.keys = { 
+            f: { side: 'left', type: Game.NOTE_A_CHAR }, 
+            d: { side: 'left', type: Game.NOTE_B_CHAR }, 
+            j: { side: 'right', type: Game.NOTE_A_CHAR }, 
+            k: { side: 'right', type: Game.NOTE_B_CHAR } 
+        };
+        this.difficultyLevels = { 16: 500, 64: 333, 256: 250 };
 
-        // 状态
         this.score = 0;
         this.combo = 0;
         this.misses = 0;
 
-        // 初始化模块
         this.ticker = new Ticker(() => this.update());
         this.leftTrack = new Track(12, 'left-to-right');
         this.rightTrack = new Track(12, 'right-to-left');
-        this.noteGenerator = new NoteGenerator(['▼', '☀']);
+        this.noteGenerator = new NoteGenerator([Game.NOTE_A_CHAR, Game.NOTE_B_CHAR], 8);
         this.renderer = new Renderer(this, this.leftTrack, this.rightTrack);
     }
 
     start() {
-        this.score = 0; this.combo = 0; this.misses = 0;
-        this.ticker.setPeriod(1000); // 初始周期
-        this.noteGenerator.weights.empty = 16; // 重置难度
-
+        this.score = 0;
+        this.combo = 0;
+        this.misses = 0;
+        
+        this.ticker.setPeriod(1000);
+        this.noteGenerator.reset();
         this.leftTrack.reset();
         this.rightTrack.reset();
-        
+
         let countdown = 3;
-        const instructions = `[按F/J消除▼][按D/K消除☀]`;
+        const instructions = `[按F/J消除${Game.NOTE_A_CHAR}][按D/K消除${Game.NOTE_B_CHAR}]`;
         this.renderer.showCountdown(countdown, instructions);
         
         const countdownInterval = setInterval(() => {
@@ -50,27 +60,24 @@ export default class Game {
 
     end(isFailure = true) {
         this.ticker.stop();
-        if (this.onGameEnd) this.onGameEnd();
+        if (this.onGameEnd) {
+            this.onGameEnd();
+        }
     }
 
-    update() { // 每次心跳时执行
-        // 1. 移动轨道并检测漏键
+    update() {
         const missedLeft = this.leftTrack.move();
-        if (missedLeft) this.handleMiss();
+        if (missedLeft) this.handleMiss('left');
+        
         const missedRight = this.rightTrack.move();
-        if (missedRight) this.handleMiss();
+        if (missedRight) this.handleMiss('right');
 
-        // 2. 生成新音符
         this.leftTrack.placeNote(this.noteGenerator.generate());
         this.rightTrack.placeNote(this.noteGenerator.generate());
         
-        // 3. 检查并更新难度
         this.updateDifficulty();
-
-        // 4. 渲染
         this.renderer.render();
 
-        // 5. 检查游戏结束
         if (this.misses >= this.maxMisses) {
             this.end();
             this.renderer.render(`[游戏结束]`);
@@ -78,28 +85,30 @@ export default class Game {
     }
 
     handleKeyPress(key) {
-        if (!this.ticker.isRunning) return; // 倒计时期间按键无效
+        if (!this.ticker.isRunning) return;
 
         const mapping = this.keys[key];
         if (!mapping) return;
 
         const track = mapping.side === 'left' ? this.leftTrack : this.rightTrack;
-        const note = track.getNoteAtJudgment();
+        const noteOnLine = track.getNoteAtJudgment();
 
-        if (note === mapping.type) { // 正确打击
+        if (noteOnLine === mapping.type) {
             this.combo++;
             this.score += (1 + this.combo);
-            track.setJudgmentEffect('💥');
-        } else { // 错误打击或空按
+            track.setJudgmentEffect(Game.HIT_CHAR);
+        } else {
             this.combo = 0;
             this.misses++;
-            track.setJudgmentEffect('❌');
+            track.setJudgmentEffect(Game.MISS_CHAR);
         }
     }
 
-    handleMiss() {
+    handleMiss(side) {
         this.combo = 0;
         this.misses++;
+        const track = side === 'left' ? this.leftTrack : this.rightTrack;
+        track.setJudgmentEffect(Game.MISS_CHAR);
     }
 
     updateDifficulty() {
